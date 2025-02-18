@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Longest prefix match</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    .app {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    caption {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      text-align: center;
+      background-color: #f8f8f8;
+      padding: 10px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    const rows = [
+      {
+        dest: '0.0.0.0/0',
+        link: '1',
+      },
+      {
+        dest: '18.0.0.0/8',
+        link: '5',
+      },
+      {
+        dest: '171.0.0.0/8',
+        link: '2',
+      },
+      {
+        dest: '171.0.0.0/10',
+        link: '4',
+      },
+      {
+        dest: '171.0.15.0/24',
+        link: '1',
+      },
+      {
+        dest: '55.128.0.0/10',
+        link: '6',
+      },
+      {
+        dest: '63.19.5.0/30',
+        link: '3',
+      },
+    ]
+
+    const App = () => {
+      return <div className="app">
+        <table>
+          <caption>Forwarding table</caption>
+          <thead>
+            <tr>
+              <th>dest</th>
+              <th>link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index}>
+                <td>{row.dest}</td>
+                <td>{row.link}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
