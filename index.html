@@ -124,7 +124,7 @@
       ];
 
       const [selectedIp, setSelectedIp] = useState(ips[0]);
-      const [link, setLink] = useState(0);
+      const [bestRow, setBestRow] = useState(null);
 
       const handleIpChange = (event) => {
         setSelectedIp(event.target.value);
@@ -132,16 +132,16 @@
 
       useEffect(() => {
         let longestPrefix = -1;
-        let link = 0;
+        let bestRow = null;
         for (const row of rows) {
           const [ip, prefixLength] = toIpAndPrefix(row.dest);
           const match = isMatch(selectedIp, ip, prefixLength);
           if (match && prefixLength > longestPrefix) {
             longestPrefix = prefixLength;
-            link = row.link
+            bestRow = row;
           }
         }
-        setLink(link);
+        setBestRow(bestRow);
       }, [selectedIp]);
 
       return <div className="app">
@@ -170,7 +170,12 @@
             <option key={index} value={ip}>{ip}</option>
           ))}
         </select>
-        <h1>Will use link {link}</h1>
+        {bestRow && <ul>
+          <li>Selected IP = {selectedIp}</li>
+          <li>Longest prefix match = {toIpAndPrefix(bestRow.dest)[1]}</li>
+          <li>Will use dest network {bestRow.dest} </li>
+          <li>Will use link {bestRow.link} </li>
+        </ul>}
       </div>
     };
 
