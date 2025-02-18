@@ -63,35 +63,49 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const ipToBinary = (ip) => {
+      const octets = ip.split('.');
+      return octets.map((octet) => {
+        return parseInt(octet).toString(2).padStart(8, '0');
+      }).join('');
+    };
+
+    const isMatch = (ip1, ip2, prefixLength) => {
+      const ip1Binary = ipToBinary(ip1);
+      const ip2Binary = ipToBinary(ip2);
+      return ip1Binary.substring(0, prefixLength) === ip2Binary.substring(0, prefixLength);
+    }
 
     const rows = [
       {
         dest: '0.0.0.0/0',
-        link: '1',
+        link: 1,
       },
       {
         dest: '18.0.0.0/8',
-        link: '5',
+        link: 5,
       },
       {
         dest: '171.0.0.0/8',
-        link: '2',
+        link: 2,
       },
       {
         dest: '171.0.0.0/10',
-        link: '4',
+        link: 4,
       },
       {
         dest: '171.0.15.0/24',
-        link: '1',
+        link: 1,
       },
       {
         dest: '55.128.0.0/10',
-        link: '6',
+        link: 6,
       },
       {
         dest: '63.19.5.0/30',
-        link: '3',
+        link: 3,
       },
     ]
 
@@ -104,7 +118,26 @@
         '171.128.16.0',
       ];
 
-      const ip = ips[0];
+      const [selectedIp, setSelectedIp] = useState(ips[0]);
+      const [link, setLink] = useState(0);
+
+      const handleIpChange = (event) => {
+        setSelectedIp(event.target.value);
+      };
+
+      useEffect(() => {
+        let longestPrefix = -1;
+        let link = 0;
+        for (const row of rows) {
+          const prefixLength = parseInt(row.dest.split('/')[1]);
+          const match = isMatch(selectedIp, row.dest.split('/')[0], prefixLength);
+          if (match && prefixLength > longestPrefix) {
+            longestPrefix = prefixLength;
+            link = row.link
+          }
+        }
+        setLink(link);
+      }, [selectedIp]);
 
       return <div className="app">
         <table>
@@ -119,7 +152,7 @@
             {rows.map((row, index) => (
               <tr
                 key={index}
-                className={true ? 'match' : ''}
+                className={isMatch(selectedIp, row.dest.split('/')[0], parseInt(row.dest.split('/')[1])) ? 'match' : ''}
               >
                 <td>{row.dest}</td>
                 <td>{row.link}</td>
@@ -127,11 +160,12 @@
             ))}
           </tbody>
         </table>
-        <select>
+        <select onChange={handleIpChange} value={selectedIp}>
           {ips.map((ip, index) => (
             <option key={index} value={ip}>{ip}</option>
           ))}
         </select>
+        <h1>Will use link {link}</h1>
       </div>
     };
 
