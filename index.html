@@ -78,6 +78,11 @@
       return ip1Binary.substring(0, prefixLength) === ip2Binary.substring(0, prefixLength);
     }
 
+    const toIpAndPrefix = (dest) => {
+      const [ip, prefix] = dest.split('/');
+      return [ip, parseInt(prefix)];
+    }
+
     const rows = [
       {
         dest: '0.0.0.0/0',
@@ -129,8 +134,8 @@
         let longestPrefix = -1;
         let link = 0;
         for (const row of rows) {
-          const prefixLength = parseInt(row.dest.split('/')[1]);
-          const match = isMatch(selectedIp, row.dest.split('/')[0], prefixLength);
+          const [ip, prefixLength] = toIpAndPrefix(row.dest);
+          const match = isMatch(selectedIp, ip, prefixLength);
           if (match && prefixLength > longestPrefix) {
             longestPrefix = prefixLength;
             link = row.link
@@ -152,7 +157,7 @@
             {rows.map((row, index) => (
               <tr
                 key={index}
-                className={isMatch(selectedIp, row.dest.split('/')[0], parseInt(row.dest.split('/')[1])) ? 'match' : ''}
+                className={isMatch(selectedIp, toIpAndPrefix(row.dest)[0], toIpAndPrefix(row.dest)[1]) ? 'match' : ''}
               >
                 <td>{row.dest}</td>
                 <td>{row.link}</td>
