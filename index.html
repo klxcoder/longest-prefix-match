@@ -41,7 +41,7 @@
     }
 
     th {
-      background-color: #4CAF50;
+      background-color: #505054;
       color: white;
     }
 
@@ -51,6 +51,11 @@
 
     tr:hover {
       background-color: #ddd;
+    }
+
+    tr.match {
+      background-color: #4CAF50;
+      color: white;
     }
   </style>
 </head>
@@ -98,7 +103,9 @@
         '44.199.230.1',
         '171.128.16.0',
       ];
+
       const ip = ips[0];
+
       return <div className="app">
         <table>
           <caption>Forwarding table</caption>
@@ -110,7 +117,10 @@
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                className={true ? 'match' : ''}
+              >
                 <td>{row.dest}</td>
                 <td>{row.link}</td>
               </tr>
