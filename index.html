@@ -91,6 +91,14 @@
     ]
 
     const App = () => {
+      const ips = [
+        '63.19.5.3',
+        '171.15.15.0',
+        '63.19.5.32',
+        '44.199.230.1',
+        '171.128.16.0',
+      ];
+      const ip = ips[0];
       return <div className="app">
         <table>
           <caption>Forwarding table</caption>
@@ -109,6 +117,11 @@
             ))}
           </tbody>
         </table>
+        <select>
+          {ips.map((ip, index) => (
+            <option key={index} value={ip}>{ip}</option>
+          ))}
+        </select>
       </div>
     };
 
